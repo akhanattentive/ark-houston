@@ -1,0 +1,204 @@
+:root {
+  /* — Persian-manuscript palette — */
+  --ink: #0e2419;          /* deep forest green */
+  --indigo: #16324f;
+  --teal: #1f6f6b;
+  --teal-bright: #2f9e93;
+  --saffron: #e0a64e;      /* gold leaf */
+  --saffron-bright: #f4c879;
+  --terracotta: #b5562f;
+  --rose: #c98a86;
+  --parchment: #f3e7cf;    /* aged paper */
+  --parchment-dim: #e7d6b5;
+  --lapis: #2a4d8f;
+
+  --paper: #f3e7cf;
+  --fg: #f3e7cf;
+
+  --serif-display: 'Cormorant Garamond', Georgia, serif;
+  --serif-body: 'Spectral', Georgia, serif;
+  --classical: 'Marcellus', Georgia, serif;
+  --arabic: 'Amiri', 'Cormorant Garamond', serif;
+
+  --gutter: clamp(1.25rem, 5vw, 6rem);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--ink);
+  color: var(--fg);
+  font-family: var(--serif-body);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+::selection {
+  background: var(--saffron);
+  color: var(--ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* — Fixed WebGL canvas behind everything — */
+#scene-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* — Paper grain + vignette overlay above the canvas, below the text — */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 42%,
+    transparent 38%,
+    rgba(7, 14, 22, 0.55) 100%
+  );
+}
+
+/* — Content scaffold above the scene — */
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Keep prose legible over bright watercolor passages without a heavy scrim. */
+.content p,
+.content .arabic,
+.content .translit,
+.content .translation,
+.content .source,
+.content .eyebrow,
+.content .pillar-n {
+  text-shadow:
+    0 1px 2px rgba(8, 14, 22, 0.65),
+    0 2px 22px rgba(8, 14, 22, 0.55);
+}
+
+/* Gradient (clipped) headings can't take text-shadow — use a drop-shadow
+   filter so the painted glyphs still cast a halo for contrast. */
+.hero-title h1.display,
+.lede.display {
+  filter: drop-shadow(0 3px 20px rgba(8, 14, 22, 0.55));
+}
+
+section,
+footer.act {
+  position: relative;
+  min-height: 100vh;
+  padding: clamp(2.5rem, 6vh, 5rem) var(--gutter);
+  display: flex;
+  flex-direction: column;
+}
+
+/* — Typography primitives — */
+.eyebrow {
+  font-family: var(--classical);
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--saffron);
+  opacity: 0.85;
+}
+
+.display {
+  font-family: var(--serif-display);
+  font-weight: 300;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+
+.arabic {
+  font-family: var(--arabic);
+  direction: rtl;
+  line-height: 1.9;
+  font-weight: 400;
+}
+
+/* — Floating verse cards — */
+.verse {
+  max-width: 30ch;
+}
+.verse .arabic {
+  font-size: clamp(1.8rem, 4.6vw, 3.6rem);
+  color: var(--parchment);
+  text-shadow: 0 2px 30px rgba(8, 16, 26, 0.6);
+}
+.verse .translit {
+  font-family: var(--classical);
+  font-style: italic;
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  letter-spacing: 0.04em;
+  color: var(--saffron-bright);
+  margin-top: 1.1rem;
+}
+.verse .translation {
+  font-family: var(--serif-body);
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+  font-style: italic;
+  opacity: 0.86;
+  margin-top: 0.5rem;
+}
+.verse .source {
+  font-family: var(--classical);
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--teal-bright);
+  margin-top: 1rem;
+  opacity: 0.85;
+}
+
+/* hairline rule */
+.rule {
+  width: 4.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--saffron), transparent);
+  margin: 1.6rem 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
