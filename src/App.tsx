@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Analytics } from '@vercel/analytics/react';
 import { Reveal } from './components/Reveal';
 import { useLenis } from './lib/useLenis';
 import { verses, mission, story, pillars } from './data/content';
@@ -126,6 +127,8 @@ export function App() {
           </Reveal>
         </footer>
       </main>
+
+      <Analytics />
     </>
   );
 }
